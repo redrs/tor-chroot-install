@@ -1,7 +1,7 @@
 tor-chroot-install
 ==================
 
-Download Tor src and install in chroot. For Debian systems.
+Automatic installation of Tor in a chroot. For Debian systems.
 
 This script will:
 
@@ -11,3 +11,5 @@ This script will:
 * Compile Tor, install in chroot.
 * Copy libs and other files needed to chroot.
 * To start with basic config run "/etc/init.d/tor-chroot start"
+
+Tested with Debian 6.0.7 and Tor 0.2.3.25.
