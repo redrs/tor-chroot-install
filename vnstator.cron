@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# small little hacky cron script to stop Tor after a
+# set limit has been hit. Needs vnstat
+
+# limits are GiB or TiB
+MAXLIM="1.50"
+MAXLIMTYPE="TiB"
+
+# is vnstatd running?
+pgrep vnstatd || vnstatd --config /etc/vnstat.conf --daemon
+
+# get vnstat bandwidth
+DATE=`date +%b`
+VNSTAT=`vnstat -m | grep $DATE`
+DATATX=`echo $VNSTAT | cut -d " " -f 6`
+DATATXTYPE=`echo $VNSTAT | cut -d " " -f 7`
+
+# stop Tor if over limit
+if [ "$DATATXTYPE" = "$MAXLIMTYPE" ]; then
+        if [ $(bc <<< "$DATATX >= $MAXLIM") -eq 1 ]; then
+                logger "WARNING bandwidth limit hit!"
+                sh /etc/init.d/tor-chroot stop
+        fi
+fi
